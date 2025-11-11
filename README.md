@@ -18,7 +18,7 @@ types of users:
 
 ## 🏠 Home Page
 
-**![Home Page](home.png)
+**![Home Page](AI_Bases_voting_system/home.png)
 **
 
 AI powered e-voting home interface.
