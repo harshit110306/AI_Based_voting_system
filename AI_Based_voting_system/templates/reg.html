@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | E-Voting System</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #ffc107;
+      --muted-white: rgba(255,255,255,0.95);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background-image: url('static/assets/login.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      color: #fff;
+      max-height: 85vh;
+      overflow: hidden;
+    }
+
+    .page-scroll {
+      padding-right: 6px;
+      overflow-y: auto;
+      max-height: calc(85vh - 36px);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .login-card {
+      color: var(--muted-white);
+      border-radius: 12px;
+      padding: 8px 6px;
+      width: 100%;
+    }
+
+    .login-card h1 {
+      font-size: 26px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .input-group-custom {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group-custom input,
+    .input-group-custom select {
+      background: transparent !important;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.35);
+      border-radius: 0;
+      color: #fff;
+      font-size: 15px;
+      padding: 12px 6px 6px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-group-custom select option {
+      background-color: #222;
+      color: #fff;
+    }
+
+    .input-group-custom select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 28px;
+    }
+
+    .input-group-custom label {
+      position: absolute;
+      top: 12px;
+      left: 6px;
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      pointer-events: none;
+      transition: 0.22s ease all;
+      background-color: transparent;
+      padding: 0 4px;
+    }
+
+    .input-group-custom input:focus,
+    .input-group-custom input:not(:placeholder-shown),
+    .input-group-custom select:focus,
+    .input-group-custom select:not([value=""]) {
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .input-group-custom input:focus + label,
+    .input-group-custom input:not(:placeholder-shown) + label,
+    .input-group-custom select:focus + label,
+    .input-group-custom select:not([value=""]) + label {
+      top: -10px;
+      left: 6px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--muted-white);
+      font-size: 18px;
+    }
+
+    /* ===== MOBILE NUMBER FIELD ===== */
+    .mobile-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .mobile-field {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid rgba(255,255,255,0.35);
+      padding-bottom: 4px;
+      transition: border-color 0.2s ease;
+    }
+
+    .mobile-prefix {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+      padding-right: 8px;
+      white-space: nowrap;
+      user-select: none;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .mobile-input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .mobile-input-wrapper input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      padding: 10px 4px 6px;
+    }
+
+    .mobile-input-wrapper label {
+      position: absolute;
+      top: 10px;
+      left: 4px;
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      pointer-events: none;
+      transition: 0.25s ease all;
+    }
+
+    .mobile-input-wrapper input:focus + label,
+    .mobile-input-wrapper input:not(:placeholder-shown) + label {
+      top: -10px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .mobile-field:focus-within {
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .invalid-msg {
+      color: #ffbcbc;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* ===== PASSWORD STRENGTH BAR ===== */
+    .strength-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .strength-section .strength {
+      flex-grow: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .strength > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      transition: width 200ms ease;
+      background: linear-gradient(90deg,#ff6b6b,#ffc107);
+    }
+
+    .strength-text {
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .info-btn {
+      background: none;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .info-btn:hover {
+      background-color: var(--accent);
+      color: #000;
+    }
+
+    /* ===== CAPTCHA ===== */
+    .captcha {
+      margin-top: 6px;
+    }
+
+    .captcha-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(255,255,255,0.25);
+      padding: 8px 6px;
+      margin-bottom: 10px;
+    }
+
+    .captcha-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--muted-white);
+      user-select: none;
+    }
+
+    .refresh-btn {
+      border: none;
+      background: none;
+      color: var(--muted-white);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+    }
+
+    .refresh-btn:hover {
+      transform: rotate(180deg);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-custom {
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-login {
+      background-color: var(--accent);
+      color: #000;
+      border: none;
+    }
+
+    .btn-login:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-home {
+      background-color: #f44336;
+      color: #fff;
+      border: none;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .toggle-link a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toggle-link a:hover {
+      text-decoration: underline;
+    }
+    .input-group-custom {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* === Unified field style === */
+.input-group-custom input,
+.input-group-custom select {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255,255,255,0.35);
+  border-radius: 0;
+  color: #fff;
+  font-size: 15px;
+  padding: 12px 6px 6px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+/* remove browser arrow, add custom */
+.input-group-custom select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  cursor: pointer;
+  padding-right: 28px; /* space for arrow */
+}
+
+/* custom arrow icon */
+.input-group-custom::after {
+  content: '\f282'; /* Bootstrap caret-down */
+  font-family: 'bootstrap-icons';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  pointer-events: none;
+}
+
+/* === FLOATING LABEL === */
+.input-group-custom label {
+  position: absolute;
+  top: 12px;
+  left: 6px;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  pointer-events: none;
+  transition: 0.25s ease all;
+  background-color: transparent;
+  padding: 0 4px;
+}
+
+/* focus / filled states */
+.input-group-custom input:focus,
+.input-group-custom input:not(:placeholder-shown),
+.input-group-custom select:focus,
+.input-group-custom select.filled {
+  border-bottom: 2px solid #ffc107;
+  box-shadow: 0 0 6px 0 #ffc10775;
+}
+
+.input-group-custom input:focus + label,
+.input-group-custom input:not(:placeholder-shown) + label,
+.input-group-custom select:focus + label,
+.input-group-custom select.filled + label {
+  top: -10px;
+  left: 6px;
+  font-size: 12px;
+  color: #ffc107;
+}
+
+/* dropdown list styling */
+.input-group-custom select option {
+  background-color: #222;
+  color: #fff;
+}
+
+
+    @media (max-width: 576px) {
+      .page-wrapper { max-width: 95%; padding: 12px; }
+      .login-card h1 { font-size: 22px; }
+      .strength-text { font-size: 11px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <div class="page-scroll">
+      <div class="login-card">
+        <h1>Sign Up</h1>
+        
+         {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes mb-3 text-center">
+          {% for category, message in messages %}
+            <div class="alert alert-warning text-dark fw-bold">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+        <form id="login-form" action="/regstation" method="POST" novalidate>
+          <div class="input-group-custom">
+            <input type="text" id="login-username" name="username" required placeholder=" " autocomplete="username">
+            <label for="login-username">Username</label>
+          </div>
+
+          <!-- MOBILE NUMBER -->
+          <div class="input-group-custom mobile-group">
+            <div class="mobile-field">
+              <div class="mobile-prefix">
+                <span>🇮🇳</span>
+                <span>+91</span>
+              </div>
+              <div class="mobile-input-wrapper">
+                <input id="mobile-input" name="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder=" " required />
+                <label for="mobile-input" class="mobile-label">Mobile Number</label>
+              </div>
+            </div>
+            <div id="mobileHelp" class="invalid-msg" style="display:none;">Enter a valid 10-digit Indian mobile number (starts with 6–9).</div>
+          </div>
+
+          <div class="input-group-custom password-container">
+            <input type="password" id="login-password" name="password" required placeholder=" " autocomplete="new-password" oninput="checkPasswordStrength()">
+            <label for="login-password">Password</label>
+            <i class="bi bi-eye eye-icon" id="eye-password" onclick="togglePassword('login-password','eye-password')"></i>
+          </div>
+
+          <div class="input-group-custom password-container">
+            <input type="password" id="confirm-password" name="confirm_password" required placeholder=" " autocomplete="new-password" oninput="checkPasswordsMatch()">
+            <label for="confirm-password">Confirm Password</label>
+            <i class="bi bi-eye eye-icon" id="eye-confirm" onclick="togglePassword('confirm-password','eye-confirm')"></i>
+            <div id="match-msg" class="invalid-msg" style="display:none;">Passwords do not match.</div>
+          </div>
+
+          <div class="strength-section">
+            <div class="strength"><i id="strength-bar"></i></div>
+            <button type="button" class="info-btn" data-bs-toggle="tooltip" title="Use 8+ chars, 1 uppercase, 1 number & special char.">
+              <i class="bi bi-exclamation-circle"></i>
+            </button>
+            <div class="strength-text text-muted-white" id="strength-text"></div>
+          </div>
+
+          <div class="input-group-custom">
+  <select id="branch" name="branch" required>
+    <option value="" selected disabled hidden>Select Branch</option>
+    <option value="CSE">CSE</option>
+    <option value="ME">ME</option>
+    <option value="BNS">BNS</option>
+    <option value="ECE">ECE</option>
+    <option value="EEE">EEE</option>
+    <option value="BT">BT</option>
+    <option value="BSEAG">BSEAG</option>
+  </select>
+  <label for="branch"></label>
+</div>
+
+<div class="input-group-custom">
+  <select id="gender" name="gender" required>
+    <option value="" selected disabled hidden>Select Gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+    <option value="prefer_not">Prefer not to say</option>
+  </select>
+  <label for="gender"></label>
+</div>
+
+            <div class="captcha mt-3"> <div class="captcha-box"> <span id="captcha-preview" class="captcha-text" aria-live="polite"></span> <button type="button" class="refresh-btn" onclick="generateCaptcha()" aria-label="Refresh CAPTCHA"> <i class="bi bi-arrow-clockwise" style="font-size:1.1rem;"></i> </button> </div> <div class="input-group-custom"> <input type="text" id="captcha-input" name="captcha-input" required placeholder=" " autocomplete="off"> <label for="captcha-input">Enter CAPTCHA</label> </div> <input type="hidden" id="captcha-value" name="captcha-value"> </div>
+
+          <div class="d-flex justify-content-between mt-3">
+            <input id="submit-btn" type="submit" value="Submit" class="btn btn-login btn-custom w-50 me-2">
+            <a href="{{ url_for('home') }}" class="btn btn-home btn-custom w-50">Cancle</a>
+          </div>
+
+          
+          <p class="toggle-link">If you have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // CAPTCHA
+    function generateCaptcha() {
+      const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let captcha = "";
+      for (let i = 0; i < 6; i++) captcha += chars[Math.floor(Math.random() * chars.length)];
+      document.getElementById("captcha-preview").innerText = captcha;
+      document.getElementById("captcha-value").value = captcha;
+      document.getElementById("captcha-input").value = "";
+    }
+
+    // PASSWORD TOGGLE
+    function togglePassword(id, eyeId) {
+      const input = document.getElementById(id);
+      const icon = document.getElementById(eyeId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace("bi-eye", "bi-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.replace("bi-eye-slash", "bi-eye");
+      }
+    }
+
+    // PASSWORD STRENGTH
+    function checkPasswordStrength() {
+      const pwd = document.getElementById('login-password').value;
+      const bar = document.getElementById('strength-bar');
+      const text = document.getElementById('strength-text');
+
+      let score = 0;
+      if (pwd.length >= 8) score++;
+      if (/[A-Z]/.test(pwd)) score++;
+      if (/[0-9]/.test(pwd)) score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+      const widths = ['10%','35%','66%','100%'];
+      bar.style.width = widths[Math.max(0, score-1)] || '0%';
+
+      if (score <= 1) {
+        bar.style.background = 'linear-gradient(90deg,#ff4d4f,#ff7a45)';
+        text.innerText = 'Weak';
+      } else if (score === 2) {
+        bar.style.background = 'linear-gradient(90deg,#ffb84d,#ffd666)';
+        text.innerText = 'Okay';
+      } else if (score === 3) {
+        bar.style.background = 'linear-gradient(90deg,#ffd666,#b3e67a)';
+        text.innerText = 'Good';
+      } else {
+        bar.style.background = 'linear-gradient(90deg,#8ef58e,#4ef0c4)';
+        text.innerText = 'Strong';
+      }
+      checkPasswordsMatch();
+    }
+
+    // CONFIRM PASSWORD
+    function checkPasswordsMatch() {
+      const pwd = document.getElementById('login-password').value;
+      const cpwd = document.getElementById('confirm-password').value;
+      const msg = document.getElementById('match-msg');
+      if (!cpwd) { msg.style.display = 'none'; return true; }
+      if (pwd === cpwd) {
+        msg.style.display = 'none';
+        return true;
+      } else {
+        msg.style.display = 'block';
+        return false;
+      }
+    }
+
+    // MOBILE VALIDATION
+    function validateMobileField() {
+      const mobile = document.getElementById('mobile-input').value.trim();
+      const help = document.getElementById('mobileHelp');
+      const re = /^[6-9]\d{9}$/;
+      if (!re.test(mobile)) {
+        help.style.display = 'block';
+        return false;
+      } else {
+        help.style.display = 'none';
+        return true;
+      }
+    }
+
+    document.getElementById('mobile-input').addEventListener('input', function(){
+      this.value = this.value.replace(/\D/g,'').slice(0,10);
+      validateMobileField();
+    });
+
+    // FORM VALIDATION
+    document.getElementById('login-form').addEventListener('submit', function(e){
+      const captchaInput = document.getElementById('captcha-input').value.trim();
+      const captchaVal = document.getElementById('captcha-value').value.trim();
+
+      if (captchaInput !== captchaVal) {
+        e.preventDefault();
+        alert('CAPTCHA does not match!');
+        return false;
+      }
+
+      if (!checkPasswordsMatch() || !validateMobileField()) {
+        e.preventDefault();
+        alert('Please correct the errors before submitting.');
+        return false;
+      }
+      return true;
+    });
+
+    document.addEventListener('DOMContentLoaded', generateCaptcha);
+  </script>
+</body>
+</html>

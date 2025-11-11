@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Face Scan Verification</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Body with full-screen background image */
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: url('static/assets/.png') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Navbar */
+        nav {
+            width: 100%;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        nav h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav .username {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        /* Main content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        video {
+            width: 90%;
+            max-width: 480px;
+            height: auto;
+            border-radius: 12px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        #nextBtn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* show only after successful scan */
+            transition: transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        #nextBtn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+        }
+
+        #canvas { display: none; }
+
+        @media (max-width: 600px) {
+            nav h2 { font-size: 1.2rem; }
+            nav .username { font-size: 1rem; }
+            video { max-width: 100%; }
+            #nextBtn { font-size: 14px; padding: 8px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <h2>Face Scan Verification</h2>
+        <div class="username">{{ user_name }}</div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <video id="video" autoplay playsinline></video>
+        <button id="nextBtn" onclick="goNext()">Next</button>
+        <div id="result"></div>
+        <canvas id="canvas" width="480" height="360"></canvas>
+    </main>
+
+    <script>
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let interval = null;
+        let stream = null;
+
+        // Start camera automatically
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } })
+                .then(s => {
+                    stream = s;
+                    video.srcObject = s;
+                    interval = setInterval(scanFace, 2000);
+                })
+                .catch(() => {
+                    document.getElementById('result').innerText = "Camera access denied.";
+                });
+        }
+
+        function scanFace() {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(blob => {
+                let formData = new FormData();
+                formData.append("frame", blob, "frame.jpg");
+
+                fetch("/face_scan", { method: "POST", body: formData })
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('result').innerText = data.message;
+                        if(data.similarity >= 40){
+                            video.style.border = "3px solid #28a745";
+                            document.getElementById('nextBtn').style.display = "inline-block";
+                        } else {
+                            video.style.border = "3px solid red";
+                            document.getElementById('nextBtn').style.display = "none";
+                        }
+                    })
+                    .catch(() => { document.getElementById('result').innerText = "Server error."; });
+            }, "image/jpeg");
+        }
+
+        function goNext() {
+            window.location.href = "/vote_cast";
+        }
+
+        window.addEventListener('load', startCamera);
+        window.addEventListener('beforeunload', () => {
+            if(stream) stream.getTracks().forEach(t => t.stop());
+            if(interval) clearInterval(interval);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forget Password | E-Voting System</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('static/assets/login.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .login-card {
+      color: #fff;
+      border-radius: 15px;
+      padding: 35px 25px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h1 {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #ffc107;
+    }
+
+    .input-group-custom {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group-custom input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #777;
+      color: #fff;
+      font-size: 16px;
+      padding: 12px 5px 6px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group-custom label {
+      position: absolute;
+      top: 12px;
+      left: 5px;
+      color: #fff;
+      font-size: 15px;
+      pointer-events: none;
+      transition: 0.3s ease all;
+    }
+
+    .input-group-custom input:focus,
+    .input-group-custom input:not(:placeholder-shown) {
+      border-bottom: 2px solid #ffc107;
+    }
+
+    .input-group-custom input:focus + label,
+    .input-group-custom input:not(:placeholder-shown) + label {
+      top: -10px;
+      font-size: 13px;
+      color: #ffc107;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #000000ff;
+      font-size: 18px;
+    }
+
+    /* CAPTCHA */
+    .captcha {
+      margin-top: 10px;
+    }
+
+    .captcha-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #555;
+      padding: 8px 0;
+      margin-bottom: 10px;
+    }
+
+    .captcha-text {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: #fff;
+      user-select: none;
+    }
+
+    .refresh-btn {
+      border: none;
+      background: none;
+      color: #ffc107;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      transform: rotate(180deg);
+    }
+
+    /* Password Strength */
+    .strength-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: -10px;
+      margin-bottom: 20px;
+    }
+
+    .strength {
+      flex: 1;
+      height: 6px;
+      background: #444;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .strength i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: red;
+      transition: width 0.3s, background-color 0.3s;
+    }
+
+    .strength-text {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    /* Circular info button */
+    .info-btn {
+      border: 2px solid #ffc107;
+      border-radius: 50%;
+      background: transparent;
+      color: #ffc107;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .info-btn:hover {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    /* Buttons */
+    .btn-custom {
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-reset {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    .btn-reset:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-home {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    .btn-home:hover {
+      background-color: #d32f2f;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .toggle-link a {
+      color: #ffc107;
+      text-decoration: none;
+    }
+
+    .toggle-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-card">
+    <h1>Forget Password</h1>
+    <form action="/forget" method="POST">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes mb-3 text-center">
+          {% for category, message in messages %}
+            <div class="alert alert-warning text-dark fw-bold">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% endwith %}
+
+      <!-- Username -->
+      <div class="input-group-custom">
+        <input type="text" id="username" name="username" required placeholder=" ">
+        <label for="username">Username</label>
+      </div>
+
+      <!-- New Password -->
+      <div class="input-group-custom password-container">
+        <input type="password" id="new-password" name="new_password" required placeholder=" " oninput="checkStrength()">
+        <label for="new-password">New Password</label>
+        <i class="bi bi-eye eye-icon" id="eye-new" onclick="togglePassword('new-password','eye-new')"></i>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-group-custom password-container">
+        <input type="password" id="confirm-password" name="confirm_password" required placeholder=" " oninput="checkPasswordsMatch()">
+        <label for="confirm-password">Confirm Password</label>
+        <i class="bi bi-eye eye-icon" id="eye-confirm" onclick="togglePassword('confirm-password','eye-confirm')"></i>
+        <div id="match-msg" class="text-danger mt-1" style="display:none;">Passwords do not match.</div>
+      </div>
+
+      <!-- Strength Bar + Tooltip -->
+      <div class="strength-section">
+        <div class="strength"><i id="strength-bar"></i></div>
+        <button type="button" class="info-btn" data-bs-toggle="tooltip" data-bs-placement="top"
+          title="Use at least 8 characters with 1 uppercase, 1 number, and 1 special symbol.">!</button>
+        <div class="strength-text text-muted-white" id="strength-text"></div>
+      </div>
+
+      <!-- CAPTCHA -->
+      <div class="captcha">
+        <div class="captcha-box">
+          <span id="captcha-preview" class="captcha-text"></span>
+          <button type="button" class="refresh-btn" onclick="generateCaptcha()">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+        <div class="input-group-custom">
+          <input type="text" id="captcha-input" name="captcha-input" required placeholder=" ">
+          <label for="captcha-input">Enter CAPTCHA</label>
+        </div>
+        <input type="hidden" id="captcha-value" name="captcha-value">
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button type="submit" class="btn btn-reset btn-custom w-50 me-2">Reset</button>
+        <a href="{{ url_for('login') }}" class="btn btn-home btn-custom w-50">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Enable tooltips
+    document.addEventListener("DOMContentLoaded", function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+      generateCaptcha();
+    });
+
+    // CAPTCHA generator
+    function generateCaptcha() {
+      const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let captcha = "";
+      for (let i = 0; i < 6; i++) captcha += chars[Math.floor(Math.random() * chars.length)];
+      document.getElementById("captcha-preview").innerText = captcha;
+      document.getElementById("captcha-value").value = captcha;
+    }
+
+    // Toggle password visibility
+    function togglePassword(id, eyeId) {
+      const input = document.getElementById(id);
+      const icon = document.getElementById(eyeId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace("bi-eye", "bi-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.replace("bi-eye-slash", "bi-eye");
+      }
+    }
+
+    // Password match
+    function checkPasswordsMatch() {
+      const newPass = document.getElementById("new-password").value;
+      const confirmPass = document.getElementById("confirm-password").value;
+      const msg = document.getElementById("match-msg");
+      msg.style.display = newPass && confirmPass && newPass !== confirmPass ? "block" : "none";
+    }
+
+    // Password strength
+    function checkStrength() {
+      const pass = document.getElementById("new-password").value;
+      const bar = document.getElementById("strength-bar");
+      const text = document.getElementById("strength-text");
+      let strength = 0;
+
+      if (pass.length >= 8) strength++;
+      if (/[A-Z]/.test(pass)) strength++;
+      if (/[0-9]/.test(pass)) strength++;
+      if (/[!@#$%^&*(),.?":{}|<>]/.test(pass)) strength++;
+
+      switch (strength) {
+        case 0:
+          bar.style.width = "0%"; text.innerText = ""; break;
+        case 1:
+          bar.style.width = "25%"; bar.style.background = "red"; text.innerText = "Weak"; break;
+        case 2:
+          bar.style.width = "50%"; bar.style.background = "orange"; text.innerText = "Medium"; break;
+        case 3:
+          bar.style.width = "75%"; bar.style.background = "yellow"; text.innerText = "Strong"; break;
+        case 4:
+          bar.style.width = "100%"; bar.style.background = "limegreen"; text.innerText = "Very Strong"; break;
+      }
+    }
+  </script>
+</body>
+</html>

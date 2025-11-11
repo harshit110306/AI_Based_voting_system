@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Loading and Ballot Box Animation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('static/assets/lod.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #00ffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Loading animation styles */
+        .loading-container {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .loading-text {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            width: 400px;
+            height: 30px;
+            background-color: #333;
+            border: 2px solid #00ffff;
+            position: relative;
+            border-radius: 5px;
+        }
+        .progress {
+            width: 0%; /* Start from 0% */
+            height: 100%;
+            background-color: #00ffff;
+            border-radius: 5px 0 0 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .percentage {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        /* 3D Ballot box styles */
+        .container {
+            position: relative;
+            width: 150px;
+            height: 200px;
+            perspective: 800px;
+        }
+
+        .ballot-box-3d {
+            width: 150px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg);
+        }
+
+        .ballot-face {
+            position: absolute;
+            width: 150px;
+            height: 100px;
+            background-color: #000;
+            border: 2px solid #00ffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Front and back face of the 3D box */
+        .ballot-face.front {
+            transform: translateZ(50px);
+        }
+        .ballot-face.back {
+            transform: rotateY(180deg) translateZ(50px);
+        }
+
+        /* Top, bottom, left, and right face of the 3D box */
+        .ballot-face.top {
+            width: 150px;
+            height: 100px;
+            background-color: #000;
+            transform: rotateX(90deg) translateZ(50px);
+        }
+
+        .ballot-face.bottom {
+            width: 150px;
+            height: 100px;
+            background-color: #000;
+            transform: rotateX(-90deg) translateZ(50px);
+        }
+
+        .ballot-face.left {
+            width: 100px;
+            height: 100px;
+            background-color: #000;
+            transform: rotateY(-90deg) translateZ(75px);
+        }
+
+        .ballot-face.right {
+            width: 100px;
+            height: 100px;
+            background-color: #000;
+            transform: rotateY(90deg) translateZ(75px);
+        }
+
+        /* Ballot paper styles */
+        .ballot-paper {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 120px;
+            background-color: #fff;
+            border: 2px solid #000;
+            border-radius: 2px;
+            animation: dropPaper 3s infinite ease-in-out;
+        }
+
+        @keyframes dropPaper {
+            0% {
+                top: -120px;
+            }
+            70% {
+                top: 10px;
+            }
+            100% {
+                top: 20px;
+                opacity: 0;
+            }
+        }
+
+        /* Success message styles */
+        .success-message {
+            display: none;
+            font-size: 32px;
+            color: #00ff00;
+            text-align: center;
+            margin-top: 20px;
+            
+        }
+
+        @keyframes blinkText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .checkmark {
+            display: none;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #00ff00;
+            position: relative;
+            margin: 0 auto 20px;
+            animation: blinkText 1s infinite; /* Blink effect */
+        }
+        .checkmark:before {
+            content: '';
+            position: absolute;
+            width: 20px; /* Thicker checkmark */
+            height: 35px; /* Thicker checkmark */
+            border: solid #fff;
+            border-width: 0 5px 5px 0; /* Adjusted thickness */
+            transform: rotate(45deg);
+            top: 20px;
+            left: 25px;
+        }
+
+        /* Hide other elements */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ballot Box Animation -->
+    <div class="container" id="ballotBoxContainer">
+        <div class="ballot-box-3d">
+            <div class="ballot-face front">VOTE</div>
+            <div class="ballot-face back"></div>
+            <div class="ballot-face top"></div>
+            <div class="ballot-face bottom"></div>
+            <div class="ballot-face right"></div>
+        </div>
+        <div class="ballot-paper"></div>
+    </div>
+    <!-- Loading Animation -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-text">LOADING...</div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="percentage" id="percentage">0%</div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="checkmark" id="checkmark"></div>
+    <div class="success-message" id="successMessage">Your Vote Successfully Recorded</div>
+
+    <script>
+    // JavaScript for loading animation progress
+    let progressBar = document.getElementById('progress');
+    let percentageText = document.getElementById('percentage');
+    let checkmark = document.getElementById('checkmark');
+    let successMessage = document.getElementById('successMessage');
+    let ballotBoxContainer = document.getElementById('ballotBoxContainer');
+    let loadingContainer = document.getElementById('loadingContainer');
+    let width = 0;
+
+    function updateProgress() {
+        if (width >= 100) {
+            clearInterval(interval);
+            // Hide ballot box and loading animation
+            ballotBoxContainer.style.display = 'none';
+            loadingContainer.style.display = 'none';
+            // Show success message with animation
+            checkmark.style.display = 'block';
+            successMessage.style.display = 'block';
+           
+            setTimeout(() => {
+                window.location.href = '/userhome';
+            }, 1000); // 2000 milliseconds = 2 seconds
+        } else {
+            width++;
+            progressBar.style.width = width + '%';
+            percentageText.innerHTML = width + '%';
+        }
+    }
+
+    let interval = setInterval(updateProgress, 10); // Updates every 20ms (2 seconds total for 100%)
+</script>
+
+</body>
+</html>

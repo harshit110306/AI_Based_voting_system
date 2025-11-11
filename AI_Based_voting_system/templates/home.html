@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Voting</title>
+  <!-- ✅ Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background-image: url('static/assets/homepage.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .navbar {
+    }
+
+    /* ✅ Logo styling */
+    .navbar-brand img {
+      height: 50px; /* adjust as needed */
+      width: auto;
+      border-radius: 5px;
+    }
+
+    .nav-link {
+      color: #6C4AB6 !important;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: #3a2a99 !important;
+    }
+
+    .content {
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      margin-top: 100px;
+      max-width: 700px;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .buttons a {
+      display: inline-block;
+      padding: 12px 28px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .buttons a:hover {
+      background-color: #3e8e41;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.75);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      font-size: 0.9rem;
+    }
+
+    /* ✅ Mobile adjustments */
+    @media (max-width: 768px) {
+      body {
+        background-image: url('static/assets/homemob.png');
+      }
+
+      .content {
+        padding-top: 5%;
+        margin-top: 60px;
+        padding: 25px;
+      }
+
+      .buttons a {
+        font-size: 0.85rem;
+        padding: 8px 18px;
+      }
+
+      .buttons {
+        flex-wrap: nowrap;
+        gap: 8px;
+      }
+
+      .navbar-brand img {
+        height: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <!-- ✅ Replace text with logo -->
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ✅ Main Content -->
+  <div class="content text-center">
+    <h1 class="display-6 fw-bold">Online Voting</h1>
+    <p class="lead"></p>
+
+    <div class="buttons">
+      <a href="{{ url_for('regstation') }}">Register</a>
+      <a href="{{ url_for('login') }}">Login</a>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Your Company. All rights reserved.
+  </footer>
+
+  <!-- ✅ Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Candidate</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: url('{{ url_for("static", filename="assets/display.png") }}') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* ✅ center vertically */
+      overflow: hidden; /* ✅ prevent unnecessary page scroll */
+    }
+
+    .container-box {
+      width: 100%;
+      max-width: 500px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      margin: 20px;
+      overflow-y: auto; /* ✅ scroll only inside box if needed */
+      max-height: 90vh; /* ✅ limit height to viewport */
+    }
+
+    .card-header {
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .btn-success {
+      background-color: #4CAF50;
+      border: none;
+    }
+
+    .btn-danger {
+      background-color: #f44336;
+      border: none;
+    }
+
+    .btn-success:hover {
+      background-color: #45a049;
+    }
+
+    .btn-danger:hover {
+      background-color: #d32f2f;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+        overflow-y: auto; /* ✅ allow scroll on mobile */
+        padding: 20px 0;
+      }
+      .container-box {
+        margin: 10px;
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-box">
+    <div class="card-header">
+      <h3>Update Candidate Information</h3>
+    </div>
+
+    <form method="POST">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ candidate.name }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="age" class="form-label">Age:</label>
+        <input type="number" class="form-control" id="age" name="age" value="{{ candidate.age }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="dob" class="form-label">Date of Birth:</label>
+        <input type="date" class="form-control" id="dob" name="dob" value="{{ candidate.dob }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="gender" class="form-label">Gender:</label>
+        <select class="form-select" id="gender" name="gender" required>
+          <option value="Male" {% if candidate.gender == 'Male' %}selected{% endif %}>Male</option>
+          <option value="Female" {% if candidate.gender == 'Female' %}selected{% endif %}>Female</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="mobile" class="form-label">Mobile:</label>
+        <input type="text" class="form-control" id="mobile" name="mobile" value="{{ candidate.mobile }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="branch" class="form-label">Branch:</label>
+        <input type="text" class="form-control" id="branch" name="branch" value="{{ candidate.branch }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ candidate.email }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="parti_name" class="form-label">Party Name:</label>
+        <input type="text" class="form-control" id="parti_name" name="parti_name" value="{{ candidate.parti_name }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="candidate_type" class="form-label">Candidate Type:</label>
+        <input type="text" class="form-control" id="candidate_type" name="candidate_type" value="{{ candidate.candidate_type }}" required>
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button type="submit" class="btn btn-success w-50 me-2">Update</button>
+        <a href="{{ url_for('candi_display') }}" class="btn btn-danger w-50">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

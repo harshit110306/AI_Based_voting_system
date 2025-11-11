@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate List</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: url('static/assets/display.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+
+    .input-group-custom {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .input-group-custom select {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: none;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #00ffff;
+      color: black;
+      font-weight: bold;
+    }
+
+    td {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+    }
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .option-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-links a {
+      text-decoration: none;
+    }
+
+    .option-links button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 13px;
+    }
+
+    .option-links .delete {
+      background-color: #f44336;
+    }
+
+    .option-links .update {
+      background-color: #2196F3;
+    }
+
+    .option-links button:hover {
+      opacity: 0.8;
+    }
+
+    .home-btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .home-btn button {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .home-btn button:hover {
+      background-color: #1976D2;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+      table, th, td {
+        font-size: 12px;
+        padding: 6px;
+      }
+      img {
+        width: 50px;
+        height: 50px;
+      }
+      .input-group-custom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+      .option-links {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .option-links button {
+        width: 100%;
+        padding: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Candidate Registration List</h2>
+
+    <!-- Branch Filter -->
+    <div class="input-group-custom">
+      <label for="branch">Select Branch:</label>
+      <select id="branch" name="branch" onchange="filterBranch()">
+        <option value="" selected hidden>Select Branch</option>
+        <option value="CSE">CSE</option>
+        <option value="ME">ME</option>
+        <option value="BNS">BNS</option>
+        <option value="ECE">ECE</option>
+        <option value="EEE">EEE</option>
+        <option value="BT">BT</option>
+        <option value="BSEAG">BSEAG</option>
+      </select>
+    </div>
+
+    {% if candidates %}
+    <table>
+      <thead>
+        <tr>
+          <th>Sl No</th>
+          <th>C ID</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>DOB</th>
+          <th>Gender</th>
+          <th>Mobile</th>
+          <th>Branch</th>
+          <th>Email</th>
+          <th>Party Name</th>
+          <th>Party Logo</th>
+          <th>Candidate Type</th>
+          <th>Option</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in candidates %}
+        <tr data-branch="{{ c.branch }}">
+          <td>{{ loop.index }}</td>
+          <td>{{ c.id }}</td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.age }}</td>
+          <td>{{ c.dob }}</td>
+          <td>{{ c.gender }}</td>
+          <td>{{ c.mobile }}</td>
+          <td>{{ c.branch }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.parti_name }}</td>
+          <td><img src="{{ url_for('static', filename='uploads/party_logos/' + c.party_logo) }}" alt="Party Logo"></td>
+          <td>{{ c.candidate_type }}</td>
+          <td class="option-links">
+            <a href="{{ url_for('update', update=c.name, branch=c.branch) }}"><button class="update">Edit</button></a>
+            <a href="{{ url_for('candi_display', delete=c.name) }}"><button class="delete">Delete</button></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p style="text-align:center; color:#ff4444;">No candidates found.</p>
+    {% endif %}
+
+    <div class="home-btn">
+      <a href="{{ url_for('admin') }}"><button>Go to Home Page</button></a>
+    </div>
+  </div>
+
+  <script>
+    function filterBranch() {
+      const branch = document.getElementById('branch').value;
+      const rows = document.querySelectorAll('tbody tr');
+
+      rows.forEach(row => {
+        if (!branch || row.dataset.branch === branch) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

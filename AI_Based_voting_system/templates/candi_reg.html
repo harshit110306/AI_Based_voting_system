@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate Registration</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('static/assets/candireg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background-color: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: none;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      border-radius: 10px;
+    }
+
+    .form-label {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .btn-success {
+      width: 48%;
+      font-weight: bold;
+    }
+
+    .btn-danger {
+      width: 48%;
+      font-weight: bold;
+    }
+
+    .scrollable-form {
+      max-height: 60vh;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 576px) {
+      .btn-success,
+      .btn-danger {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Candidate Registration</h2>
+
+    <form id="candidate-form" action="/candreg" method="post" enctype="multipart/form-data">
+      <div class="scrollable-form">
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Name:</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ user.username }}" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="dob" class="form-label">Date of Birth:</label>
+          <input type="date" class="form-control" id="dob" name="dob" min="1900-01-01" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="age" class="form-label">Age:</label>
+          <input type="text" class="form-control" id="age" name="age" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="gender" class="form-label">Gender:</label>
+          <select id="gender" name="gender" class="form-select" required>
+            <option value="">Select Gender</option>
+            <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="mobile" class="form-label">Mobile Number:</label>
+          <input type="text" class="form-control" id="mobile" name="mobile" value="{{ user.mobileno }}" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="branch" class="form-label">Branch:</label>
+          <input type="text" class="form-control" id="branch" name="branch" value="{{ user.city }}" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address:</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="parti_name" class="form-label">Party Name:</label>
+          <select id="parti_name" name="parti_name" class="form-select" required>
+            <option value="">Select Party</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="candidate_type" class="form-label">Candidate Type:</label>
+          <select id="candidate_type" name="candidate_type" class="form-select" required>
+            <option value="">Select Type</option>
+            <option value="MP">MP</option>
+            <option value="MLA">MLA</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="party_logo" class="form-label">Upload Party Logo:</label>
+          <input type="file" class="form-control" id="party_logo" name="party_logo" accept="image/*" required />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-success">Register</button>
+        <button type="button" class="btn btn-danger" "><a href="{{ url_for('candi_home') }}">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
