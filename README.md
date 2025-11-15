@@ -1,4 +1,4 @@
-# AI Powered E-Voting System
+# AI Based Voting System
 
 This is an **AI powered e-voting system** built using:
 
@@ -143,10 +143,7 @@ Admin can: - Update user details\
 
 
 ![update.png](AI_Based_voting_system/update.png)
-### Results Page
 
-![result.png](result.png)
-See which candidate won and total votes.
 ------------------------------------------------------------------------
 ## 📁 Project Folder Structure — AI Powered E-Voting System
 
@@ -223,7 +220,7 @@ and referenced inside the README.
 ## ✅ How to Run the Project
 
 ``` bash
-git clone <your-repo-url>
+git clone https://github.com/harshit110306/AI_Based_voting_system.git
 cd AI_Based_voting_system
 pip install -r requirements.txt
 python app.py
